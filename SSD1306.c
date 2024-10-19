@@ -12,11 +12,11 @@ static void SSD1306_I2C_SendCommand( ssd1306_t * SSD1306 , uint8_t command )
 #elif defined(__XC16)
     I2C_Start();
     I2C_Tx(LCD_Data->lcd_address);
-    I2C_Tx(LCD_Data->data[0]);
-    I2C_Tx(LCD_Data->data[1]);
+    I2C_Tx(LCD_Data->cmd[0]);
+    I2C_Tx(LCD_Data->cmd[1]);
     I2C_Stop();
 #elif defined(__STM32F4)
-    I2C_masterTransmit(LCD_Data->lcd_address, LCD_Data->data, 4, 100);
+    I2C_masterTransmit(LCD_Data->lcd_address, LCD_Data->cmd, SSD1306_COMMAND_LEN, 100);
 #elif defined(USE_HAL_DRIVER)
   HAL_I2C_Master_Transmit(&hi2c1, SSD1306->address, SSD1306->cmd, SSD1306_COMMAND_LEN, 10);
 #endif
@@ -38,9 +38,9 @@ static void SSD1306_I2C_SendData( ssd1306_t * SSD1306 )
     I2C_Tx(LCD_Data->data[3]);
     I2C_Stop();
 #elif defined(__STM32F4)
-    I2C_masterTransmit(LCD_Data->lcd_address, LCD_Data->data, 4, 100);
+    I2C_masterTransmit(LCD_Data->lcd_address, LCD_Data->data, SSD1306_DATA_LEN, 100);
 #elif defined(USE_HAL_DRIVER)
-  HAL_I2C_Master_Transmit(&hi2c1, SSD1306->address, SSD1306->cmd, SSD1306_COMMAND_LEN, 10);
+    HAL_I2C_Master_Transmit(&hi2c1, (SSD1306->address)<<1, SSD1306->data, SSD1306_DATA_LEN, 10);
 #endif
 }
 
