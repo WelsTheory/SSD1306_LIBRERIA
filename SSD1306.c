@@ -11,14 +11,14 @@ static void SSD1306_I2C_SendCommand( ssd1306_t * SSD1306 , uint8_t command )
     #endif
 #elif defined(__XC16)
     I2C_Start();
-    I2C_Tx(LCD_Data->lcd_address);
-    I2C_Tx(LCD_Data->cmd[0]);
-    I2C_Tx(LCD_Data->cmd[1]);
+    I2C_Tx(SSD1306->address);
+    I2C_Tx(SSD1306->cmd[0]);
+    I2C_Tx(SSD1306->cmd[1]);
     I2C_Stop();
 #elif defined(__STM32F4)
-    I2C_masterTransmit(LCD_Data->lcd_address, LCD_Data->cmd, SSD1306_COMMAND_LEN, 100);
+    I2C_masterTransmit(SSD1306->address, SSD1306->cmd, SSD1306_COMMAND_LEN, 100);
 #elif defined(USE_HAL_DRIVER)
-  HAL_I2C_Master_Transmit(&hi2c1, SSD1306->address, SSD1306->cmd, SSD1306_COMMAND_LEN, 10);
+  HAL_I2C_Master_Transmit(&hi2c1, (SSD1306->address)<<1, SSD1306->cmd, SSD1306_COMMAND_LEN, 10);
 #endif
 }
 
@@ -31,14 +31,16 @@ static void SSD1306_I2C_SendData( ssd1306_t * SSD1306 )
     #endif
 #elif defined(__XC16)
     I2C_Start();
-    I2C_Tx(LCD_Data->lcd_address);
-    I2C_Tx(LCD_Data->data[0]);
-    I2C_Tx(LCD_Data->data[1]);
-    I2C_Tx(LCD_Data->data[2]);
-    I2C_Tx(LCD_Data->data[3]);
+    I2C_Tx(SSD1306->address);
+    I2C_Tx(SSD1306->data[0]);
+    I2C_Tx(SSD1306->data[1]);
+    I2C_Tx(SSD1306->data[2]);
+    I2C_Tx(SSD1306->data[3]);
+    // ... rellenar hasta 16
+    I2C_Tx(SSD1306->data[16]);
     I2C_Stop();
 #elif defined(__STM32F4)
-    I2C_masterTransmit(LCD_Data->lcd_address, LCD_Data->data, SSD1306_DATA_LEN, 100);
+    I2C_masterTransmit(SSD1306->address, SSD1306->data, SSD1306_DATA_LEN, 100);
 #elif defined(USE_HAL_DRIVER)
     HAL_I2C_Master_Transmit(&hi2c1, (SSD1306->address)<<1, SSD1306->data, SSD1306_DATA_LEN, 10);
 #endif
@@ -393,12 +395,12 @@ void SSD1306_I2C_Caracter( ssd1306_t * SSD1306, int16_t x, int16_t y, char value
           {
             if (SSD1306->Font.inverted == false )
             {
-              SSD1306->color = SSD1306_BLACK;
+              SSD1306->color = SSD1306_WHITE;
               SSD1306_I2C_DrawPixel(SSD1306, (int16_t)(x+cnt), (int16_t)(y+(rowcnt*8)+b));
             }
             else
             {
-              SSD1306->color = SSD1306_WHITE;
+              SSD1306->color = SSD1306_BLACK;
               SSD1306_I2C_DrawPixel(SSD1306, (int16_t)(x+cnt), (int16_t)(y+(rowcnt*8)+b));
             }
           }
@@ -432,12 +434,12 @@ void SSD1306_I2C_Caracter( ssd1306_t * SSD1306, int16_t x, int16_t y, char value
         {
           if ( SSD1306->Font.inverted == false )
           {
-            SSD1306->color = SSD1306_BLACK;
+            SSD1306->color = SSD1306_WHITE;
             SSD1306_I2C_DrawPixel(SSD1306, (int16_t)(x+cx), (int16_t)(y+cy));
           }
           else
           {
-            SSD1306->color = SSD1306_WHITE;
+            SSD1306->color = SSD1306_BLACK;
             SSD1306_I2C_DrawPixel(SSD1306, (int16_t)(x+cx), (int16_t)(y+cy));
           }
         }

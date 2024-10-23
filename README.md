@@ -3,7 +3,8 @@
 ¡Bienvenido! 
 Aquí está la librería del SSD1306, lista para programar en:
 
-**PIC18F57Q43 👈🏻**
+**PIC18F57Q43 👉 [aquí](https://youtu.be/qmSq_9HEHFo) 👈🏻** 
+ 
 **STM32F429 con HAL 👈🏻**
 **STM32F429 sin HAL 👈🏻**
 
